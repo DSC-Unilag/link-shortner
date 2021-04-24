@@ -23,6 +23,10 @@ const verifyToken = (req, res, next)  => {
   }
 }
 
+router.get('/docs', (req, res) => {
+  res.redirect('https://documenter.getpostman.com/view/11853513/TzJx9cWf')
+})
+
 router.get('/', verifyToken, async (req, res) => {
   const {user} = await jwt.verify(req.token, SECRET_KEY)
   const links_ = await getLinks(user._id)
