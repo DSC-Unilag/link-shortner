@@ -31,28 +31,28 @@ router.get('/', async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
   try {
     const {user} = await jwt.verify(req.token, SECRET_KEY)
-
     let {url} = req.body
     let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
     let data = await createLink(identifier, url, user._id)
     if (!data) {
       let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-      let data = await createLink(identifier, url)
+      data = await createLink(identifier, url)
     }
     res.status(201).json({
-      id: data.id,
+      id: data._id,
       identifier: data.identifier,
       url: data.url,
-      shortened_url: `${req.hostname}/g/${identifier}`,
+      shortened_url: `${req.protocol + '://' + req.get('host') + req.originalUrl}g/${identifier}`,
       message: "short link created successfully",
       status: "ok"
     })
   } catch (err) {
+    console.log(err)
     res.status(500).json({err})
   }
 })
 
-router.get('/g/:slug', async (req, res, next) => {
+router.get('/g/:slug', async (req, res) => {
   let slug = req.params.slug
   let url = await getLink(slug)
   if (!url) res.status(404).json({
@@ -62,15 +62,23 @@ router.get('/g/:slug', async (req, res, next) => {
   res.status(308).redirect(url)
 })
 
-router.put('/:slug', async (req, res, next) => {
+router.put('/:slug', verifyToken, async (req, res) => {
   let {url} = req.body
+  const {user} = await jwt.verify(req.token, SECRET_KEY)
   try {
-    let data = await editLink(req.params.slug, url)
+    let data = await editLink(req.params.slug, url, user._id)
+    console.log(data)
+    if (data === 'Unauthorized') {
+      return res.status(401).json({
+        message: 'Unauthorized',
+        status: "bad"
+      })
+    }
     res.status(201).json({
       id: data.id,
       identifier: data.identifier,
       url: data.url,
-      shortened_url: `${req.hostname}/g/${data.identifier}`,
+      shortened_url: `${req.hostname}:${req.port}/g/${data.identifier}`,
       message: "short link updated successfully",
       status: "ok"
     })
@@ -82,8 +90,15 @@ router.put('/:slug', async (req, res, next) => {
   }
 })
 
-router.delete('/:slug', async (req, res, next) => {
-  await deleteLink(req.params.slug)
+router.delete('/:slug', verifyToken, async (req, res) => {
+  const {user} = await jwt.verify(req.token, SECRET_KEY)
+  let data = await deleteLink(req.params.slug, user._id)
+  if (data === 'Unauthorized') {
+    res.status(401).json({
+      message: 'Unauthorized',
+      status: "bad"
+    })
+  }
   res.status(200).json({
     message: "data deleted successfully",
     status: "ok"
