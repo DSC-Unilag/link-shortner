@@ -6,7 +6,20 @@ const {
    deleteLink 
 } = require('./models.helpers')
 const router = express.Router()
+const jwt = require('jsonwebtoken')
 
+const verifyToken = (req, res, next)  => {
+  const tokenHeader = req.headers['authorization']
+  if (typeof tokenHeader !== 'undefined') {
+      const token = tokenHeader.split(' ')[1]
+      req.token = token
+      next()
+  } else {
+      res.status(403).json({
+          error: 'Unauthorized'
+      })
+  }
+}
 
 router.get('/', async (req, res) => {
   res.json({
@@ -15,6 +28,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+
   let {url} = req.body
   let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
   let data = await createLink(identifier, url)
@@ -32,7 +46,7 @@ router.post('/', async (req, res) => {
   })
 })
 
-router.get('/g/:slug', async (req, res) => {
+router.get('/g/:slug', async (req, res, next) => {
   let slug = req.params.slug
   let url = await getLink(slug)
   if (!url) res.status(404).json({
@@ -42,7 +56,7 @@ router.get('/g/:slug', async (req, res) => {
   res.status(308).redirect(url)
 })
 
-router.put('/:slug', async (req, res) => {
+router.put('/:slug', async (req, res, next) => {
   let {url} = req.body
   try {
     let data = await editLink(req.params.slug, url)
@@ -62,7 +76,7 @@ router.put('/:slug', async (req, res) => {
   }
 })
 
-router.delete('/:slug', async (req, res) => {
+router.delete('/:slug', async (req, res, next) => {
   await deleteLink(req.params.slug)
   res.status(200).json({
     message: "data deleted successfully",

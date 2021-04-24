@@ -16,7 +16,11 @@ const linkSchema = new mongoose.Schema({
     type: String,
     unique: true
   }, 
-  url: String
+  url: String,
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'users' 
+  }
 })
 
 const userSchema = new mongoose.Schema({
