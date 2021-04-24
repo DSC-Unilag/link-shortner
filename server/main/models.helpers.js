@@ -12,11 +12,9 @@ const createLink = async (identifier, url, user) => {
 
 const editLink = async (identifier, url, userId) => {
   const link = await ShortLink.findOne({identifier})
-  console.log(link)
-  console.log(userId)
-  console.log(link.user !== userId)
   if (!link) return
-  if (link.user !== userId) return 'Unauthorized'
+  console.log(link.user !== userId)
+  if (link.user.toString() !== userId) return "Unauthorized"
   if (url) {
     link.url = url
   }
@@ -25,8 +23,10 @@ const editLink = async (identifier, url, userId) => {
 }
 
 const deleteLink = async (identifier, userId) => {
+  const link = await ShortLink.findOne({identifier})
+  if (!link) return
   try {
-    if (link.user !== userId) return 'Unauthorized'
+    if (link.user.toString() !== userId) return "Unauthorized"
     await ShortLink.deleteOne({identifier})
   } catch {
 
@@ -34,12 +34,20 @@ const deleteLink = async (identifier, userId) => {
   return 
 }
 
-const getLink = async identifier => {
+const getLink = async (identifier, userId) => {
   let link = await ShortLink.findOne({identifier})
   if (!link) return
-  return link.url
+  console.log(link.user, userId)
+  if (link.user.toString() !== userId) return "Unauthorized"
+  return link
 } 
 
+const getLinks = async ( user ) => {
+  let link = await ShortLink.find({user})
+  // console.log(link.toString())
+  return link
+}
+
 module.exports = {
-  createLink, editLink, deleteLink, getLink
+  createLink, editLink, deleteLink, getLink, getLinks
 }

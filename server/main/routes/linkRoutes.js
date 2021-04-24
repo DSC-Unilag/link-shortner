@@ -2,8 +2,9 @@ const express = require('express')
 const { 
   createLink, 
   getLink,
-   editLink, 
-   deleteLink 
+  getLinks,
+  editLink, 
+  deleteLink 
 } = require('../models.helpers')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
@@ -22,9 +23,49 @@ const verifyToken = (req, res, next)  => {
   }
 }
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
+  const {user} = await jwt.verify(req.token, SECRET_KEY)
+  const links_ = await getLinks(user._id)
+  let links = []
+  for (let link of links_) {
+    // link.shortened_url = `${req.protocol}://${req.get('host')}/g${link.identifier}`
+    console.log(link)
+    links.push({
+      _id: link._id,
+      identifier: link.identifier,
+      url: link.url,
+      user: link.user,
+      shortened_url: `${req.protocol}://${req.get('host')}/g/${link.identifier}`
+    })
+  }
   res.json({
-    message: "API for DSC UNILAG short link, documentation coming soon..."
+    links
+  })
+})
+
+router.get('/:slug', verifyToken, async (req, res) => {
+  const {user} = await jwt.verify(req.token, SECRET_KEY)
+  let identifier = req.params.slug
+  const link = await getLink(identifier, user._id)
+  if (!link) {
+    return res.status(404).json({
+      message: 'No link with that identifier',
+      status: "bad"
+    })
+  }
+  if (link === "Unauthorized") {
+    return res.status(401).json({
+      message: 'Unauthorized',
+      status: "bad"
+    })
+  }
+  res.json({
+    id: link._id,
+    identifier: link.identifier,
+    url: link.url,
+    shortened_url: `${req.protocol}://${req.get('host')}/g${req.originalUrl}`,
+    message: "short link created successfully",
+    status: "ok"
   })
 })
 
@@ -42,7 +83,7 @@ router.post('/', verifyToken, async (req, res) => {
       id: data._id,
       identifier: data.identifier,
       url: data.url,
-      shortened_url: `${req.protocol + '://' + req.get('host') + req.originalUrl}g/${identifier}`,
+      shortened_url: `${req.protocol + '://' + req.get('host')}g/${identifier}`,
       message: "short link created successfully",
       status: "ok"
     })
@@ -56,7 +97,7 @@ router.get('/g/:slug', async (req, res) => {
   let slug = req.params.slug
   let url = await getLink(slug)
   if (!url) res.status(404).json({
-    message: "Invalid path",
+    message: "Invalid Identifier",
     status: "bad"
   })
   res.status(308).redirect(url)
@@ -67,8 +108,13 @@ router.put('/:slug', verifyToken, async (req, res) => {
   const {user} = await jwt.verify(req.token, SECRET_KEY)
   try {
     let data = await editLink(req.params.slug, url, user._id)
-    console.log(data)
-    if (data === 'Unauthorized') {
+    if (!data) {
+      return res.status(404).json({
+        message: 'No link with that identifier',
+        status: "bad"
+      })
+    }
+    if (data === "Unauthorized") {
       return res.status(401).json({
         message: 'Unauthorized',
         status: "bad"
@@ -78,14 +124,15 @@ router.put('/:slug', verifyToken, async (req, res) => {
       id: data.id,
       identifier: data.identifier,
       url: data.url,
-      shortened_url: `${req.hostname}:${req.port}/g/${data.identifier}`,
+      shortened_url: `${req.protocol + '://' + req.get('host')}g/${data.identifier}`,
       message: "short link updated successfully",
       status: "ok"
     })
-  } catch {
+  } catch (err) {
     res.status(500).json({
       message: "Something went wrong",
-      status: 'bad'
+      status: 'bad',
+      error: err.toString()
     })
   }
 })
@@ -93,8 +140,14 @@ router.put('/:slug', verifyToken, async (req, res) => {
 router.delete('/:slug', verifyToken, async (req, res) => {
   const {user} = await jwt.verify(req.token, SECRET_KEY)
   let data = await deleteLink(req.params.slug, user._id)
-  if (data === 'Unauthorized') {
-    res.status(401).json({
+  if (!data) {
+    return res.status(404).json({
+      message: 'No link with that identifier',
+      status: "bad"
+    })
+  }
+  if (data === "Unauthorized") {
+    return res.status(401).json({
       message: 'Unauthorized',
       status: "bad"
     })
