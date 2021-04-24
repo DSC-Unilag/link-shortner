@@ -11,7 +11,7 @@ mongoose.connect(
   }
 );
 
-const schema = new mongoose.Schema({
+const linkSchema = new mongoose.Schema({
   identifier:  {
     type: String,
     unique: true
@@ -19,6 +19,15 @@ const schema = new mongoose.Schema({
   url: String
 })
 
-const ShortLink = mongoose.model('short-link', schema);
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: {
+    type: String,
+    unique: true
+  },
+  password: String
+})
 
-module.exports = ShortLink
+export const User = mongoose.model('user', userSchema)
+
+export const ShortLink = mongoose.model('short-link', linkSchema);
