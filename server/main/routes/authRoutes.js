@@ -9,7 +9,7 @@ const {SECRET_KEY} = process.env
 
 
 // auth - signup & login
-router.post('/signup', async (req, res, next) => {
+router.post('/create', async (req, res, next) => {
   try {
     req.body.password = await bcrypt.hash(req.body.password ,10)
     const user = await User.create(req.body)

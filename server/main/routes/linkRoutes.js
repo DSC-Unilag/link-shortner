@@ -4,9 +4,10 @@ const {
   getLink,
    editLink, 
    deleteLink 
-} = require('./models.helpers')
+} = require('../models.helpers')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
+const {SECRET_KEY}  = process.env
 
 const verifyToken = (req, res, next)  => {
   const tokenHeader = req.headers['authorization']
@@ -27,23 +28,28 @@ router.get('/', async (req, res) => {
   })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
+  try {
+    const {user} = await jwt.verify(req.token, SECRET_KEY)
 
-  let {url} = req.body
-  let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-  let data = await createLink(identifier, url)
-  if (!data) {
+    let {url} = req.body
     let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-    let data = await createLink(identifier, url)
+    let data = await createLink(identifier, url, user._id)
+    if (!data) {
+      let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
+      let data = await createLink(identifier, url)
+    }
+    res.status(201).json({
+      id: data.id,
+      identifier: data.identifier,
+      url: data.url,
+      shortened_url: `${req.hostname}/g/${identifier}`,
+      message: "short link created successfully",
+      status: "ok"
+    })
+  } catch (err) {
+    res.status(500).json({err})
   }
-  res.status(201).json({
-    id: data.id,
-    identifier: data.identifier,
-    url: data.url,
-    shortened_url: `${req.hostname}/g/${identifier}`,
-    message: "short link created successfully",
-    status: "ok"
-  })
 })
 
 router.get('/g/:slug', async (req, res, next) => {

@@ -32,6 +32,6 @@ const userSchema = new mongoose.Schema({
   password: String
 })
 
-export const User = mongoose.model('user', userSchema)
+exports.User = mongoose.model('user', userSchema)
 
-export const ShortLink = mongoose.model('short-link', linkSchema);
+exports.ShortLink = mongoose.model('short-link', linkSchema);

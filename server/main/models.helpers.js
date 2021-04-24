@@ -1,8 +1,8 @@
 const collection = require('./models')
 
-const createLink = async (identifier, url) => {
+const createLink = async (identifier, url, user) => {
   try {
-    const newLink = await collection.create({identifier, url})
+    const newLink = await collection.create({identifier, url, user})
     newLink.save()
     return newLink
   } catch {

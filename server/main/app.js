@@ -12,5 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRoutes)
 app.use('/', linkRouter)
+// app.use(createError())
 
-module.exports = app;
+app.listen(3000, () => {
+  console.log('app Listening on port: 3000')
+})
