@@ -21,7 +21,7 @@ const linkSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'users' 
   }
-})
+}, { timestamps: true })
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     unique: true
   },
   password: String
-})
+}, { timestamps: true })
 
 exports.User = mongoose.model('user', userSchema)
 
