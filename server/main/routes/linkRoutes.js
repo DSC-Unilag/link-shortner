@@ -32,8 +32,6 @@ router.get('/', verifyToken, async (req, res) => {
   const links_ = await getLinks(user._id)
   let links = []
   for (let link of links_) {
-    // link.shortened_url = `${req.protocol}://${req.get('host')}/g${link.identifier}`
-    console.log(link)
     links.push({
       _id: link._id,
       identifier: link.identifier,
@@ -43,7 +41,9 @@ router.get('/', verifyToken, async (req, res) => {
     })
   }
   res.json({
-    links
+    message: ",short links retrieved successfully",
+    status: "ok",
+    data: links
   })
 })
 
@@ -92,7 +92,6 @@ router.post('/', verifyToken, async (req, res) => {
       status: "ok"
     })
   } catch (err) {
-    console.log(err)
     res.status(500).json({err})
   }
 })
@@ -128,7 +127,7 @@ router.put('/:slug', verifyToken, async (req, res) => {
       id: data.id,
       identifier: data.identifier,
       url: data.url,
-      shortened_url: `${req.protocol + '://' + req.get('host')}g/${data.identifier}`,
+      shortened_url: `${req.protocol}://${req.get('host')}/g/${data.identifier}`,
       message: "short link updated successfully",
       status: "ok"
     })

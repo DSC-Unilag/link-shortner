@@ -37,14 +37,11 @@ const deleteLink = async (identifier, userId) => {
 const getLink = async (identifier, userId) => {
   let link = await ShortLink.findOne({identifier})
   if (!link) return
-  console.log(link.user, userId)
-  if (link.user.toString() !== userId) return "Unauthorized"
-  return link
+  return link.url
 } 
 
 const getLinks = async ( user ) => {
   let link = await ShortLink.find({user})
-  // console.log(link.toString())
   return link
 }
 
