@@ -12,8 +12,14 @@ const {SECRET_KEY} = process.env
 router.post('/create', async (req, res, next) => {
   try {
     req.body.password = await bcrypt.hash(req.body.password ,10)
-    const user = await User.create(req.body)
-    res.status(200).json(user)
+    let user = await User.create(req.body)
+    user = user.toObject()
+    delete user.password
+    res.status(201).json({
+      data: user,
+      message: 'User created successfully',
+      status: 'ok'
+    })
   } catch (error) {
     res.status(400).json({error})
   }
@@ -22,13 +28,15 @@ router.post('/create', async (req, res, next) => {
 router.post('/signin', async (req, res, next) => {
   try {
     const {email, password} = req.body
-    const user = await User.findOne({email})
+    let user = await User.findOne({email})
     if (user) {
       const match = await bcrypt.compare(password, user.password)
       if (match) {
         const token = await jwt.sign({user}, SECRET_KEY)
         res.status(200).json({
-          token, user
+          data: {token, user},
+          message: 'successfully retrieved token for user',
+          status: 'ok'
         })
       } else {
         res.status(400).json({error: 'Invalid email or password'})

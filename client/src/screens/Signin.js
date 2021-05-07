@@ -1,16 +1,24 @@
 import { useHistory } from "react-router-dom"
+import { getToken } from "../utils/auth"
+import Navbar from '../components/Navbar'
 
 const Signin = () => {
   const history = useHistory()
   localStorage.getItem('token') && history.push('/dashboard')
-  const handleClick = (e) => {
+  const handleClick = async e => {
     e.preventDefault()
     let email = e.target.email.value
     let password = e.target.password.value
+    let user = await getToken({email, password})
+    localStorage.setItem('token', user.data.token)
+    localStorage.setItem('name', user.data.user.name)
+    localStorage.setItem('email', user.data.user.email)
+    history.push('/dashboard')
   }
 
   return (
     <div>
+      <Navbar />
       Signin Page
       <form action="" onSubmit={handleClick}>
         {/* Email */}
