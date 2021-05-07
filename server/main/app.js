@@ -10,8 +10,8 @@ app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/auth', authRoutes)
-app.use('/', linkRouter)
+app.use('/api/auth', authRoutes)
+app.use('/api', linkRouter)
 // app.use(createError())
 
 app.listen(3000, () => {
