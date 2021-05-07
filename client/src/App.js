@@ -1,17 +1,31 @@
-import axios from 'axios'
-import {useState, useEffect} from 'react'
+import { 
+  BrowserRouter as Router, 
+  Switch, 
+  Route, 
+  useHistory 
+} from "react-router-dom"
+import Navbar from './components/Navbar' 
+import Home from './screens/Home'
+import Signin from './screens/Signin'
+import Signup from './screens/Signup'
+import Dashboard from './screens/Dashboard'
 
 function App() {
-  const [hello, setHello] = useState(null)
-  useEffect(() => {
-    axios.get('/hello')
-    .then(res => setHello(res.data))
-    .catch(err => console.log(err))
-  })
+  const history = useHistory()
   return (
-    <div>
-      {hello? <div>{hello}</div> : null}
-    </div>
+    <Router>
+      <Navbar />
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/dashboard" component={Dashboard} />
+        <Route exact path="/login" component={Signin} />
+        <Route exact path="/register" component={Signup} />
+        <Route exact path="/logout" component={() => {
+          localStorage.clear()
+          history.push('/')
+        }} />
+      </Switch>
+    </Router>
   );
 }
 
