@@ -1,32 +1,38 @@
-import {useRef} from 'react'
 import { useHistory } from "react-router-dom"
 
 const Signup = () => {
   const history = useHistory()
   localStorage.getItem('token') && history.push('/dashboard')
-  const email = useRef('')
-  const password = useRef('')
   const handleClick = (e) => {
     e.preventDefault()
+    let name = e.target.name.value
+    let email = e.target.email.value
+    let password = e.target.password.value
   }
   return (
     <div>
       Signup Page
-      <form action="">
+      <form action="" onSubmit={handleClick}>
+        {/* Name */}
+        <div>
+          <label htmlFor="name">Full Name:  </label>
+          <input type="name" name="name" />
+        </div>
+
         {/* Email */}
         <div>
           <label htmlFor="email">Email:  </label>
-          <input type="email" ref={email} />
+          <input type="email" name="email" />
         </div>
 
         {/* Password */}
         <div>
           <label htmlFor="password">Password:  </label>
-          <input type="password" ref={password} />
+          <input type="password" name="password" />
         </div>
 
         {/* button */}
-        <button onClick={handleClick}>Register</button>
+        <button>Register</button>
       </form>
     </div>
   )
