@@ -36,7 +36,6 @@ router.get('/', verifyToken, async (req, res) => {
       _id: link._id,
       identifier: link.identifier,
       url: link.url,
-      user: link.user,
       title: link.title,
       shortened_url: `${req.protocol}://${req.get('host')}/g/${link.identifier}`
     })
@@ -65,11 +64,13 @@ router.get('/:slug', verifyToken, async (req, res) => {
     })
   }
   res.json({
-    id: link._id,
-    identifier: link.identifier,
-    url: link.url,
-    title: link.title,
-    shortened_url: `${req.protocol}://${req.get('host')}/g${req.originalUrl}`,
+    data: {
+      id: link._id,
+      identifier: link.identifier,
+      url: link.url,
+      title: link.title,
+      shortened_url: `${req.protocol}://${req.get('host')}/g${req.originalUrl}`
+    },
     message: "short link created successfully",
     status: "ok"
   })
@@ -80,17 +81,19 @@ router.post('/', verifyToken, async (req, res) => {
     const {user} = await jwt.verify(req.token, SECRET_KEY)
     let {url, title} = req.body
     let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-    let data = await createLink(identifier, url, user._id)
+    let data = await createLink(identifier, url, user._id, title)
     if (!data) {
       let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
       data = await createLink(identifier, url, user._id, title)
     }
     res.status(201).json({
-      id: data._id,
-      identifier: data.identifier,
-      url: data.url,
-      title: data.title,
-      shortened_url: `${req.protocol + '://' + req.get('host')}g/${identifier}`,
+      data: {
+        id: data._id,
+        identifier: data.identifier,
+        url: data.url,
+        title: data.title,
+        shortened_url: `${req.protocol + '://' + req.get('host')}g/${identifier}`
+      },
       message: "short link created successfully",
       status: "ok"
     })
@@ -127,11 +130,13 @@ router.put('/:slug', verifyToken, async (req, res) => {
       })
     }
     res.status(201).json({
-      id: data.id,
-      identifier: data.identifier,
-      url: data.url,
-      title: data.title,
-      shortened_url: `${req.protocol}://${req.get('host')}/g/${data.identifier}`,
+      data: {
+        id: data.id,
+        identifier: data.identifier,
+        url: data.url,
+        title: data.title,
+        shortened_url: `${req.protocol}://${req.get('host')}/g/${data.identifier}`
+      },
       message: "short link updated successfully",
       status: "ok"
     })
@@ -161,7 +166,8 @@ router.delete('/:slug', verifyToken, async (req, res) => {
   }
   res.status(200).json({
     message: "data deleted successfully",
-    status: "ok"
+    status: "ok",
+    data: null
   }) 
 })
 

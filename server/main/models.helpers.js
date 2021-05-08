@@ -13,7 +13,6 @@ const createLink = async (identifier, url, user, title) => {
 const editLink = async (identifier, url, userId) => {
   const link = await ShortLink.findOne({identifier})
   if (!link) return
-  console.log(link.user !== userId)
   if (link.user.toString() !== userId) return "Unauthorized"
   if (url) {
     link.url = url
