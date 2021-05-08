@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
 import Navbar from '../components/Navbar'
+import { createLink, getLinks } from '../utils/links'
 
 const Dashboard = () => {
   const history = useHistory()
@@ -8,35 +9,34 @@ const Dashboard = () => {
   const [clicked, setClicked] = useState(false)
   const [data, setData] = useState([])
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        title: 'App',
-        link: 'https://google.com',
-        shortened_url: 'app/g/'
-      },
-      {
-        id: 2,
-        title: 'App',
-        link: 'https://google.com',
-        shortened_url: 'app/g/'
-      }
-    ])
+    const fetchData = async () => {
+      let res = await getLinks(localStorage.getItem('token'))
+      console.log(res)
+      setData(res.data)
+    }
+    fetchData()
     return () => {
       'cleanup'
     }
   }, [])
-  const handleClick = e => {
+  const handleClick = async e => {
     e.preventDefault()
     console.log(e.target.title.value)
     console.log(e.target.link.value)
-    if (e.target.name.value && e.target.link.value) {
+    console.log('Submit')
+    if (true) {
+      console.log('Validated')
+      let newLink = (await createLink(
+        {title: e.target.title.value, url: e.target.link.value}, 
+        localStorage.getItem('token')
+      )).data
+      console.log(newLink)
       setData([
         {
-          id: data.length+1,
-          title: e.target.title.value,
-          link: e.target.link.value,
-          shortened_url: '/gg/gg/'
+          id: newLink.id,
+          title: newLink.title,
+          link: newLink.url,
+          shortened_url: newLink.shortened_url
         },
         ...data
       ])
@@ -79,10 +79,10 @@ const Dashboard = () => {
         <tbody>
           {data.map(ele => {
             return <Link 
-                      key={ele.id} 
+                      key={ele._id} 
                       ele={ele}
                       handleDelete={() => {
-                        setData(data.filter(d => d.id !== ele.id))
+                        setData(data.filter(d => d._id !== ele._id))
                       }} 
                       handleEdit ={() =>{
                         setClicked(true)
@@ -99,7 +99,7 @@ const Link = ({ele, handleDelete, handleEdit}) => {
   return (
     <tr>
       <td>{ele.title}</td>
-      <td>{ele.link}</td>
+      <td>{ele.url}</td>
       <td>{ele.shortened_url}</td>
       <td><button onClick={handleEdit}>Edit</button></td>
       <td><button onClick={handleDelete}>Delete</button></td>
