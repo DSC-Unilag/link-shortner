@@ -68,11 +68,13 @@ const Dashboard = () => {
 
       <table>
         <thead>
-          <td>Title</td>
-          <td>Link</td>
-          <td>Shortened URL</td>
-          <td>Edit</td>
-          <td>Delete</td>
+          <tr>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Shortened URL</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
         </thead>
         <tbody>
           {data.map(ele => {
