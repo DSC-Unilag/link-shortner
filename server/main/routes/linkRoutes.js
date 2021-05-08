@@ -37,6 +37,7 @@ router.get('/', verifyToken, async (req, res) => {
       identifier: link.identifier,
       url: link.url,
       user: link.user,
+      title: link.title,
       shortened_url: `${req.protocol}://${req.get('host')}/g/${link.identifier}`
     })
   }
@@ -67,6 +68,7 @@ router.get('/:slug', verifyToken, async (req, res) => {
     id: link._id,
     identifier: link.identifier,
     url: link.url,
+    title: link.title,
     shortened_url: `${req.protocol}://${req.get('host')}/g${req.originalUrl}`,
     message: "short link created successfully",
     status: "ok"
@@ -76,17 +78,18 @@ router.get('/:slug', verifyToken, async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
   try {
     const {user} = await jwt.verify(req.token, SECRET_KEY)
-    let {url} = req.body
+    let {url, title} = req.body
     let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
     let data = await createLink(identifier, url, user._id)
     if (!data) {
       let identifier = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-      data = await createLink(identifier, url)
+      data = await createLink(identifier, url, user._id, title)
     }
     res.status(201).json({
       id: data._id,
       identifier: data.identifier,
       url: data.url,
+      title: data.title,
       shortened_url: `${req.protocol + '://' + req.get('host')}g/${identifier}`,
       message: "short link created successfully",
       status: "ok"
@@ -127,6 +130,7 @@ router.put('/:slug', verifyToken, async (req, res) => {
       id: data.id,
       identifier: data.identifier,
       url: data.url,
+      title: data.title,
       shortened_url: `${req.protocol}://${req.get('host')}/g/${data.identifier}`,
       message: "short link updated successfully",
       status: "ok"

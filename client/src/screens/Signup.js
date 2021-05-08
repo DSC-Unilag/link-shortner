@@ -15,7 +15,7 @@ const Signup = () => {
     localStorage.setItem('token', user.data.token)
     localStorage.setItem('name', user.data.user.name)
     localStorage.setItem('email', user.data.user.email)
-    history.push('/dashboards')
+    history.push('/dashboard')
   }
   return (
     <div>

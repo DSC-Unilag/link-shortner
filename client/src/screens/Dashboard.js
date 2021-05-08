@@ -8,8 +8,14 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Navbar />
-      Dashboard page
+      <Navbar /> <br /><hr />
+      Dashboard page <br /> <hr />
+      <button>New URL</button>
+      <form action="">
+        <div>
+          <label htmlFor="title">Title</label>
+        </div>
+      </form>
     </div>
   )
 }

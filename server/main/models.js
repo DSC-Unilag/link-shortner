@@ -17,6 +17,7 @@ const linkSchema = new mongoose.Schema({
     unique: true
   }, 
   url: String,
+  title: String,
   user: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'users' 

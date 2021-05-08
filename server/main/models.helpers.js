@@ -1,8 +1,8 @@
 const {ShortLink} = require('./models')
 
-const createLink = async (identifier, url, user) => {
+const createLink = async (identifier, url, user, title) => {
   try {
-    const newLink = await ShortLink.create({identifier, url, user})
+    const newLink = await ShortLink.create({identifier, url, user, title})
     newLink.save()
     return newLink
   } catch {
