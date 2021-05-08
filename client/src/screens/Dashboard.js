@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
 import Navbar from '../components/Navbar'
-import { createLink, getLinks } from '../utils/links'
+import { createLink, deleteLink, getLinks } from '../utils/links'
 
 const Dashboard = () => {
   const history = useHistory()
@@ -33,7 +33,7 @@ const Dashboard = () => {
       console.log(newLink)
       setData([
         {
-          id: newLink.id,
+          _id: newLink.id,
           title: newLink.title,
           link: newLink.url,
           shortened_url: newLink.shortened_url
@@ -81,7 +81,9 @@ const Dashboard = () => {
             return <Link 
                       key={ele._id} 
                       ele={ele}
-                      handleDelete={() => {
+                      handleDelete={async identifier => {
+                        let data = await deleteLink(identifier, localStorage.getItem('token'))
+                        console.log(data)
                         setData(data.filter(d => d._id !== ele._id))
                       }} 
                       handleEdit ={() =>{
@@ -102,7 +104,7 @@ const Link = ({ele, handleDelete, handleEdit}) => {
       <td>{ele.url}</td>
       <td>{ele.shortened_url}</td>
       <td><button onClick={handleEdit}>Edit</button></td>
-      <td><button onClick={handleDelete}>Delete</button></td>
+      <td><button onClick={() => {handleDelete(ele.identifier)}}>Delete</button></td>
     </tr>
   )
 }

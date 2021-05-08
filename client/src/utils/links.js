@@ -19,16 +19,17 @@ export const deleteLink = async (slug, token) => {
       'Authorization': `Bearer ${token}`
     }
   })
+  console.log(await link)
   return (await link).data
 }
 
 export const getLink = async (slug, token) => {
-  let links =  axios.get(`${REACT_APP_API_URL}/${slug}`, {
+  let link =  axios.get(`${REACT_APP_API_URL}/${slug}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
   })
-  return (await links).data
+  return (await link).data
 }
 
 export const createLink = async (data, token) => {
