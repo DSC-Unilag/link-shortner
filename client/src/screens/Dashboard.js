@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
 import Navbar from '../components/Navbar'
-import { createLink, deleteLink, getLinks } from '../utils/links'
+import { createLink, deleteLink, editLink, getLinks } from '../utils/links'
 
 const Dashboard = () => {
   const history = useHistory()
@@ -86,7 +86,9 @@ const Dashboard = () => {
                         console.log(data)
                         setData(data.filter(d => d._id !== ele._id))
                       }} 
-                      handleEdit ={() =>{
+                      handleEdit ={(payload) =>{
+                        await editLink(payload._id, payload)
+                        setData(data.map(d => d._id === payload._id? payload : d))
                         setClicked(true)
                       }}
                     />
@@ -103,7 +105,13 @@ const Link = ({ele, handleDelete, handleEdit}) => {
       <td>{ele.title}</td>
       <td>{ele.url}</td>
       <td>{ele.shortened_url}</td>
-      <td><button onClick={handleEdit}>Edit</button></td>
+      <td><button onClick={() => {
+        let payload = {
+          ...ele
+        }
+        handleEdit(payload)
+        }}>Edit</button>
+      </td>
       <td><button onClick={() => {handleDelete(ele.identifier)}}>Delete</button></td>
     </tr>
   )
