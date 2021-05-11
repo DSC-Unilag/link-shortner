@@ -86,7 +86,7 @@ const Dashboard = () => {
                         console.log(data)
                         setData(data.filter(d => d._id !== ele._id))
                       }} 
-                      handleEdit ={(payload) =>{
+                      handleEdit ={async payload =>{
                         await editLink(payload._id, payload)
                         setData(data.map(d => d._id === payload._id? payload : d))
                         setClicked(true)
