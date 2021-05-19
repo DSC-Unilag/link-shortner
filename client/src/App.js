@@ -9,8 +9,14 @@ import Signin from './screens/Signin'
 import Signup from './screens/Signup'
 import Dashboard from './screens/Dashboard'
 import NotFound from './screens/NotFound'
+import EventEmitter from 'events';
 
+const event = new EventEmitter();
 function App() {
+  window.flash = (message, type="success") => event.emit(
+    'flash', 
+    ({message, type})
+  );
   return (
     <Router>
       <Switch>
