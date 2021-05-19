@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
 import Navbar from '../components/Navbar'
 import { createLink, deleteLink, editLink, getLinks } from '../utils/links'
+import Flash from '../components/Flash/flash'
 
 const Dashboard = () => {
   const history = useHistory()
@@ -40,12 +41,14 @@ const Dashboard = () => {
         },
         ...data
       ])
+      window.flash('New Shortened link created successfully', 'success')
       setClicked(false)
     }
   }
   return (
     <div>
       <Navbar /> <br /><hr />
+      <Flash />
       Dashboard page <br /> <hr />
       {
       !clicked ? 
@@ -85,10 +88,12 @@ const Dashboard = () => {
                         let data = await deleteLink(identifier, localStorage.getItem('token'))
                         console.log(data)
                         setData(data.filter(d => d._id !== ele._id))
+                        window.flash('Shortened link deleted successfully', 'success')
                       }} 
                       handleEdit ={async payload =>{
                         await editLink(payload._id, payload)
                         setData(data.map(d => d._id === payload._id? payload : d))
+                        window.flash('New Shortened link edited successfully', 'success')
                         setClicked(true)
                       }}
                     />

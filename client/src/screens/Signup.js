@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom"
 import { createUser, getToken } from "../utils/auth"
 import Navbar from '../components/Navbar'
+import { Flash } from "../components/Flash/flash"
 
 const Signup = () => {
   const history = useHistory()
@@ -15,11 +16,15 @@ const Signup = () => {
     localStorage.setItem('token', user.data.token)
     localStorage.setItem('name', user.data.user.name)
     localStorage.setItem('email', user.data.user.email)
+    setTimeout(() => {
+      window.flash('Logged in successfully', 'success')
+    }, 100)
     history.push('/dashboard')
   }
   return (
     <div>
       <Navbar />
+      <Flash />
       Signup Page
       <form action="" onSubmit={handleClick}>
         {/* Name */}

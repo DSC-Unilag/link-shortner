@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom"
 import { getToken } from "../utils/auth"
 import Navbar from '../components/Navbar'
+import { Flash } from "../components/Flash/flash"
 
 const Signin = () => {
   const history = useHistory()
@@ -13,12 +14,16 @@ const Signin = () => {
     localStorage.setItem('token', user.data.token)
     localStorage.setItem('name', user.data.user.name)
     localStorage.setItem('email', user.data.user.email)
+    setTimeout(() => {
+      window.flash('Logged in successfully', 'success')
+    }, 100)
     history.push('/dashboard')
   }
 
   return (
     <div>
       <Navbar />
+      <Flash />
       Signin Page
       <form action="" onSubmit={handleClick}>
         {/* Email */}
