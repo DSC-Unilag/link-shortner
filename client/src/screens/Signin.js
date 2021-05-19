@@ -10,14 +10,18 @@ const Signin = () => {
     e.preventDefault()
     let email = e.target.email.value
     let password = e.target.password.value
-    let user = await getToken({email, password})
-    localStorage.setItem('token', user.data.token)
-    localStorage.setItem('name', user.data.user.name)
-    localStorage.setItem('email', user.data.user.email)
-    setTimeout(() => {
-      window.flash('Logged in successfully', 'success')
-    }, 100)
-    history.push('/dashboard')
+    try {
+      let user = await getToken({email, password})
+      localStorage.setItem('token', user.data.token)
+      localStorage.setItem('name', user.data.user.name)
+      localStorage.setItem('email', user.data.user.email)
+      setTimeout(() => {
+        window.flash('Logged in successfully', 'success')
+      }, 100)
+      history.push('/dashboard')
+    } catch (error) {
+      window.flash(error.message, 'error')
+    }
   }
 
   return (

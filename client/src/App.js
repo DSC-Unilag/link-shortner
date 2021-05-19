@@ -11,7 +11,7 @@ import Dashboard from './screens/Dashboard'
 import NotFound from './screens/NotFound'
 import EventEmitter from 'events';
 
-const event = new EventEmitter();
+export const event = new EventEmitter();
 function App() {
   window.flash = (message, type="success") => event.emit(
     'flash', 

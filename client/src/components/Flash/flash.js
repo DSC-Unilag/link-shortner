@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Bus from '../../utils/Bus';
+import {event} from '../../App';
 import './flash.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
@@ -7,14 +7,14 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 export const Flash = () => {
   
     let [visibility, setVisibility] = useState(false);
-    let [message, setMessage] = useState('');
-    let [type, setType] = useState('');
+    let [message, setMessage] = useState('')
+    let [type, setType] = useState('')
 
     useEffect(() => {
-      Bus.addListener('flash', ({message, type}) => {
-          setVisibility(true);
-          setMessage(message);
-          setType(type);
+      event.addListener('flash', ({message, type}) => {
+          setVisibility(true)
+          setMessage(message)
+          setType(type)
       });
               
 
@@ -22,7 +22,7 @@ export const Flash = () => {
 
   useEffect(() => {
       setTimeout(() => {
-        setVisibility(false);
+        setVisibility(false)
       }, 10000)
   })
 
