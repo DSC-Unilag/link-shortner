@@ -26,6 +26,9 @@ function App() {
         <Route exact path="/register" component={Signup} />
         <Route exact path="/logout" component={() => {
           localStorage.clear();
+          setTimeout(() => {
+            window.flash('Signed out successfully', 'success')
+          }, 100)
           return <Redirect to="/" />
         }} />
         <Route exact path="*" component={NotFound} />
