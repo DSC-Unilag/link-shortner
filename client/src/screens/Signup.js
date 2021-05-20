@@ -5,7 +5,10 @@ import { Flash } from "../components/Flash/flash"
 
 const Signup = () => {
   const history = useHistory()
-  localStorage.getItem('token') && history.push('/dashboard')
+  if(localStorage.getItem('token')) {
+    window.flash('You are logged in', 'warning')
+    history.push('/dashboard')
+  }
   const handleClick = async e => {
     e.preventDefault()
     let name = e.target.name.value
@@ -22,7 +25,10 @@ const Signup = () => {
       }, 100)
       history.push('/dashboard')
     } catch (error) {
-      window.flash(error.message, 'error')
+      console.log(error.message)
+      error.message = 'Request failed with status code 409' ? 
+        window.flash('Email chosen', 'error') : 
+        window.flash(error.message, 'error')
     }
   }
   return (
