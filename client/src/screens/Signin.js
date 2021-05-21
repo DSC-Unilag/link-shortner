@@ -1,13 +1,25 @@
-import { useHistory } from "react-router-dom"
-import { getToken } from "../utils/auth"
-import Navbar from '../components/Navbar'
+import { useHistory } from "react-router-dom";
+import { getToken } from "../utils/auth";
+import Navbar from "../components/Navbar";
+import { useMediaQuery } from "react-responsive";
 import { Flash } from "../components/Flash/flash"
-
+    
 const Signin = () => {
   const history = useHistory()
   if(localStorage.getItem('token')) {
     history.push('/dashboard')
     window.flash('You are logged in', 'warning')
+  }
+  
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 760px)",
+  });
+  let formWidth = {};
+
+  if (isDesktop) {
+    formWidth = {
+      width: "40%",
+    };
   }
   const handleClick = async e => {
     e.preventDefault()
@@ -32,25 +44,41 @@ const Signin = () => {
     <div>
       <Navbar />
       <Flash />
-      Signin Page
-      <form action="" onSubmit={handleClick}>
-        {/* Email */}
-        <div>
-          <label htmlFor="email">Email:  </label>
-          <input type="email" name="email" />
-        </div>
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password">Password:  </label>
-          <input type="password" name="password" />
-        </div>
+      <div className="form" style={formWidth}>
+        <h3>SIGN IN</h3>
 
-        {/* button */}
-        <button>Login</button>
-      </form>
+        <form action="" onSubmit={handleClick}>
+          {/* Email */}
+          <div>
+            <label htmlFor="email"></label>
+            <input type="email" name="email" placeholder="Email:" />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label htmlFor="password"></label>
+            <input type="password" name="password" placeholder="Password:" />
+            <a className="forgot-password" href="">
+              Forgot password?
+            </a>
+          </div>
+
+          {/* button */}
+          <div>
+            <button className="green-btn">Sign in</button>
+          </div>
+
+          <p>
+            You don't have an account?{" "}
+            <a className="inline-signup" href="">
+              Register
+            </a>
+          </p>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Signin
+export default Signin;

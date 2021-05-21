@@ -1,6 +1,6 @@
-import { 
-  BrowserRouter as Router, 
-  Switch, 
+import {
+  BrowserRouter as Router,
+  Switch,
   Route,
   Redirect
 } from "react-router-dom"
@@ -12,6 +12,7 @@ import NotFound from './screens/NotFound'
 import EventEmitter from 'events';
 
 export const event = new EventEmitter();
+
 function App() {
   window.flash = (message, type="success") => event.emit(
     'flash', 
