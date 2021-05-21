@@ -28,6 +28,143 @@
   color: #61dafb;
 }
 
+nav {
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  margin-left: 1rem;
+}
+
+.form {
+  text-align: center;
+  width: 70%;
+  margin: 0 auto;
+}
+
+h3 {
+  margin-top: 5rem;
+}
+
+input {
+  margin-top: 1rem;
+  border-radius: 1rem;
+  border: 1.5px solid grey;
+  padding: 10px;
+  width: 90%;
+}
+
+.green-btn,
+.del-btn {
+  padding: 10px 40px;
+  border-radius: 1rem;
+  border-style: none;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.green-btn {
+  background-color: #34a853;
+  color: white;
+}
+
+.del-btn {
+  color: rgba(0, 0, 0, 0.904);
+  border: 1px solid rgba(0, 0, 0, 0.445);
+  background-color: white;
+  margin-left: 1rem;
+}
+
+.input-link {
+  box-shadow: 2px 2px 3px 0px #00000040;
+  border-style: none;
+  padding: 15px 40px;
+  border-radius: 2rem;
+  width: 15rem;
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+}
+
+.form p {
+  font-size: 12px;
+}
+
+.inline-signup {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+  color: #323232;
+}
+
+a:hover {
+  color: #34a853;
+}
+
+h1 {
+  padding-bottom: 1rem;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  padding: 5rem 1rem;
+}
+
+.green-nav {
+  background-color: #34a853;
+  margin: 1rem;
+  padding: 0.5rem;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  border-radius: 5rem;
+}
+
+.green-item {
+  color: rgba(255, 255, 255, 0.603);
+  text-align: center;
+}
+
+.green-item:active,
+.green-item:focus,
+.green-item:hover {
+  color: rgb(255, 255, 255);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 0.3rem;
+}
+
+.green-item p {
+  font-size: 12px;
+}
+
+.short-links {
+  font-size: 1.5rem;
+  align-self: center;
+  display: none;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

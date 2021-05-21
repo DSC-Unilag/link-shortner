@@ -1,15 +1,17 @@
-import { useHistory } from "react-router-dom"
-import { createUser, getToken } from "../utils/auth"
-import Navbar from '../components/Navbar'
+import { useHistory } from "react-router-dom";
+import { createUser, getToken } from "../utils/auth";
+import Navbar from "../components/Navbar";
+import { useMediaQuery } from "react-responsive";
 import { Flash } from "../components/Flash/flash"
 
 const Signup = () => {
-  const history = useHistory()
+  const history = useHistory();
   if(localStorage.getItem('token')) {
     window.flash('You are logged in', 'warning')
     history.push('/dashboard')
   }
-  const handleClick = async e => {
+  
+  const handleClick = async (e) => {
     e.preventDefault()
     let name = e.target.name.value
     let email = e.target.email.value
@@ -30,36 +32,50 @@ const Signup = () => {
         window.flash('Email chosen', 'error') : 
         window.flash(error.message, 'error')
     }
+  };
+
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 760px)",
+  });
+  let formWidth = {};
+
+  if (isDesktop) {
+    formWidth = {
+      width: "40%",
+    };
   }
+
   return (
     <div>
       <Navbar />
       <Flash />
-      Signup Page
-      <form action="" onSubmit={handleClick}>
-        {/* Name */}
-        <div>
-          <label htmlFor="name">Full Name:  </label>
-          <input type="name" name="name" />
-        </div>
+      <div className="form" style={formWidth}>
+        <h3>REGISTER</h3>
+        <form action="" onSubmit={handleClick}>
+          {/* Name */}
+          <div>
+            <label htmlFor="name"></label>
+            <input type="name" name="name" placeholder="Full Name:" />
+          </div>
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email">Email:  </label>
-          <input type="email" name="email" />
-        </div>
+          {/* Email */}
+          <div>
+            <label htmlFor="email"></label>
+            <input type="email" name="email" placeholder="Email:" />
+          </div>
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password">Password:  </label>
-          <input type="password" name="password" />
-        </div>
+          {/* Password */}
+          <div>
+            <label htmlFor="password"></label>
+            <input type="password" name="password" placeholder="Password:" />
+          </div>
 
-        {/* button */}
-        <button>Register</button>
-      </form>
+          {/* button */}
+          <button className="green-btn">Register</button>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
