@@ -27,11 +27,11 @@ const Signin = () => {
     let password = e.target.password.value
     console.log(password)
     try {
-      // let user = await getToken({email, password})
-      // localStorage.setItem('token', user.data.token)
-      // localStorage.setItem('name', user.data.user.name)
-      // localStorage.setItem('email', user.data.user.email)
-      // history.push('/dashboard')
+      let user = await getToken({email, password})
+      localStorage.setItem('token', user.data.token)
+      localStorage.setItem('name', user.data.user.name)
+      localStorage.setItem('email', user.data.user.email)
+      history.push('/dashboard')
       window.flash('Logged in successfully', 'success')
     } catch (error) {
       error.message = 'Request failed with status code 400' ? 
