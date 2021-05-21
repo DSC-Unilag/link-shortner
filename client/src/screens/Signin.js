@@ -2,21 +2,15 @@ import { useHistory } from "react-router-dom";
 import { getToken } from "../utils/auth";
 import Navbar from "../components/Navbar";
 import { useMediaQuery } from "react-responsive";
-
+import { Flash } from "../components/Flash/flash"
+    
 const Signin = () => {
-  const history = useHistory();
-  localStorage.getItem("token") && history.push("/dashboard");
-  const handleClick = async (e) => {
-    e.preventDefault();
-    let email = e.target.email.value;
-    let password = e.target.password.value;
-    let user = await getToken({ email, password });
-    localStorage.setItem("token", user.data.token);
-    localStorage.setItem("name", user.data.user.name);
-    localStorage.setItem("email", user.data.user.email);
-    history.push("/dashboard");
-  };
-
+  const history = useHistory()
+  if(localStorage.getItem('token')) {
+    window.flash('You are logged in', 'warning')
+    history.push('/dashboard')
+  }
+  
   const isDesktop = useMediaQuery({
     query: "(min-width: 760px)",
   });
@@ -27,10 +21,30 @@ const Signin = () => {
       width: "40%",
     };
   }
+  const handleClick = async e => {
+    e.preventDefault()
+    let email = e.target.email.value
+    let password = e.target.password.value
+    try {
+      let user = await getToken({email, password})
+      localStorage.setItem('token', user.data.token)
+      localStorage.setItem('name', user.data.user.name)
+      localStorage.setItem('email', user.data.user.email)
+      setTimeout(() => {
+        window.flash('Logged in successfully', 'success')
+      }, 100)
+      history.push('/dashboard')
+    } catch (error) {
+      error.message = 'Request failed with status code 400' ? 
+        window.flash('Invalid email or password', 'error') : 
+        window.flash(error.message, 'error')
+    }
+  }
 
   return (
     <div>
       <Navbar />
+      <Flash />
 
       <div className="form" style={formWidth}>
         <h3>SIGN IN</h3>
