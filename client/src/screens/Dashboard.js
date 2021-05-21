@@ -6,7 +6,10 @@ import {Flash} from '../components/Flash/flash'
 
 const Dashboard = () => {
   const history = useHistory()
-  !localStorage.getItem('token') && history.push('/')
+  if(!localStorage.getItem('token')) {
+    history.push('/')
+    window.flash('You need to be logged in', 'warning')
+  }
   const [clicked, setClicked] = useState(false)
   const [data, setData] = useState([])
   useEffect(() => {

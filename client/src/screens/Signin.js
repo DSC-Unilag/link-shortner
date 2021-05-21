@@ -6,22 +6,21 @@ import { Flash } from "../components/Flash/flash"
 const Signin = () => {
   const history = useHistory()
   if(localStorage.getItem('token')) {
-    window.flash('You are logged in', 'warning')
     history.push('/dashboard')
+    window.flash('You are logged in', 'warning')
   }
   const handleClick = async e => {
     e.preventDefault()
     let email = e.target.email.value
     let password = e.target.password.value
+    console.log(password)
     try {
-      let user = await getToken({email, password})
-      localStorage.setItem('token', user.data.token)
-      localStorage.setItem('name', user.data.user.name)
-      localStorage.setItem('email', user.data.user.email)
-      setTimeout(() => {
-        window.flash('Logged in successfully', 'success')
-      }, 100)
-      history.push('/dashboard')
+      // let user = await getToken({email, password})
+      // localStorage.setItem('token', user.data.token)
+      // localStorage.setItem('name', user.data.user.name)
+      // localStorage.setItem('email', user.data.user.email)
+      // history.push('/dashboard')
+      window.flash('Logged in successfully', 'success')
     } catch (error) {
       error.message = 'Request failed with status code 400' ? 
         window.flash('Invalid email or password', 'error') : 
